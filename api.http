@@ -1,0 +1,34 @@
+### Ir a la pagina principal
+http://localhost:3000
+
+################################ CONSULTAS
+
+### Ruta sin resultados.
+GET http://localhost:3000/error
+### Ruta sin resultados.
+GET http://localhost:3000/invalido
+
+### Mostrar productos por código
+GET http://localhost:3000/productos/1234
+
+### Mostrar productos por código
+GET http://localhost:3000/productos/1498
+
+### Mostrar productos por código que no existe
+GET http://localhost:3000/productos/14989
+
+### Mostrar productos por código mal formado
+GET http://localhost:3000/productos/1498q1
+
+### Mostrar todos los productos
+GET http://localhost:3000/productos/
+
+### Mostrar todos los productos de una categoría
+GET http://localhost:3000/productos?categoria=Comestible
+### Mostrar todos los productos de una categoría
+GET http://localhost:3000/productos?categoria=Limpieza
+
+
+################################ OPERACIONES
+
+

@@ -1,0 +1,9 @@
+# Base de datos
+MONGODB_URLSTRING = mongodb+srv://xguarlo:.........@cluster0.5srzj8w.mongodb.net/
+PORT = 3000
+DATABASE_NAME = supermarketDB
+COLLECTION_NAME = products
+
+#
+# NODE_ENV = production
+NODE_ENV = development
