@@ -1,4 +1,7 @@
+
+#############################################################################
 ### Ir a la pagina principal
+#############################################################################
 http://localhost:3000
 
 
@@ -23,11 +26,11 @@ GET http://localhost:3000/invalido
 ### CONSULTAS POR ID
 ################################ 
 
-### Mostrar productos por ID
-GET http://localhost:3000/productos/66906407b138ba18415e5a89
-
-### Mostrar productos por ID
+### Mostrar productos por ID ("Azúcar")
 GET http://localhost:3000/productos/66906407b138ba18415e5a8a
+
+### Mostrar productos por ID ("Jabón para la ropa")
+GET http://localhost:3000/productos/66906407b138ba18415e5aa0
 
 ### Mostrar productos por ID que no existe
 GET http://localhost:3000/productos/66906407b138ba18415e5b8a
@@ -58,9 +61,11 @@ GET http://localhost:3000/productos?codigo=1498
 GET http://localhost:3000/productos?codigo=1398
 
 ### Mostrar productos por código mal formado. Contiene Letras!
+### Valores numéricos [1001..9999]
 GET http://localhost:3000/productos?codigo=1498q1
 
 ### Mostrar productos por código mal formado. Mas de 4 cifras!
+### Valores numéricos [1001..9999]
 GET http://localhost:3000/productos?codigo=14989
 
 
@@ -148,7 +153,8 @@ GET http://localhost:3000/productos?nombre=caFetera
 
 ### >>> Se agregar un productos sin código para que el sistema lo genere.
 
-### Caso 1 - Funciona - Se le manda ("sector") para comprobar que no lo registra!
+### Caso 1 - Funciona 
+### > Va sin código, para que lo genere, y Se manda ("sector") para comprobar que no lo registra!
 POST http://localhost:3000/productos/
 content-type: application/json
 
@@ -181,13 +187,63 @@ content-type: application/json
 }
 
 
+### Agregar un producto con datos validos y 
+### enviando el código para que el sistema lo valide, y si lo és, lo registra!
+POST http://localhost:3000/productos/
+content-type: application/json
+
+{
+    "codigo": 8888, 
+    "nombre": "Trapo de piso con cod propio 8808",
+    "precio": 88.08,
+    "categoria": "Limpieza"
+}
+
+### Lo manda nuevamente, y como el codigo existe, le crea uno nuevo! 
+### > Podría validar también que el nombre ya existe. Por ahora no lo hace!! 
+POST http://localhost:3000/productos/
+content-type: application/json
+
+{
+    "codigo": 8888, 
+    "nombre": "Trapo de piso con cod propio 8808",
+    "precio": 88.08,
+    "categoria": "Limpieza"
+}
+
+### Intenta agregar un producto con datos validos, pero,
+###  el código enviando, no cumple con el formato numérico [1001..9999] requerido
+POST http://localhost:3000/productos/
+content-type: application/json
+
+{
+    "codigo": "888808", 
+    "nombre": "Trapo de piso con cod propio 8808",
+    "precio": 88.08,
+    "categoria": "Limpieza"
+}
+
+### Otro caso como el anterior, pero codigo numérico.
+POST http://localhost:3000/productos/
+content-type: application/json
+
+{
+    "codigo": 888808, 
+    "nombre": "Trapo de piso con cod propio 8808",
+    "precio": 88.08,
+    "categoria": "Limpieza"
+}
+
 ### >>> Testeos
 
 ### Mostrar nuevo producto ingresado por código.
-GET http://localhost:3000/productos/?codigo=9992
-### Mostrar nuevo producto ingresado por mombre.
+GET http://localhost:3000/productos/?codigo=8888
+
+### Mostrar nuevos producto ingresado por mombre.
+### Todos los que se agregaron con "Trapo..."
 GET http://localhost:3000/productos?nombre=trapo
-### Para poder consultarlo
+
+### Para poder consultarlo por _id
 GET http://localhost:3000/productos/66a805702c3854e3d4cc5e6e
 
 
@@ -195,8 +251,10 @@ GET http://localhost:3000/productos/66a805702c3854e3d4cc5e6e
 ### Modificar un producto
 ###################################
 
+### Buscar un producto que exista y proceder con su _id !!! 
+
 ### Primero lo consulto 
-GET http://localhost:3000/productos/66a8057c2c3854e3d4cc5e71
+GET http://localhost:3000/productos/66a957b8eeda3709eabc991c
 
 ### Modificar/Actualizar un producto parcialmente
 ### Modificar un producto por id. Si devuelve 204 "No Content" 
@@ -205,7 +263,7 @@ GET http://localhost:3000/productos/66a8057c2c3854e3d4cc5e71
 ### Caso correcto que funciona!
 ### En este caso se actualiza solo precio. Si llega otro dato, se ignora.
 ### "nombre": "Trapo de piso eee", está para demostrarlo  !!!
-PATCH http://localhost:3000/productos/66a8057c2c3854e3d4cc5e71
+PATCH http://localhost:3000/productos/66a957b8eeda3709eabc991c
 content-type: application/json
 
 {
@@ -214,7 +272,7 @@ content-type: application/json
 }
 
 ### Para poder consultarlo y ver los cambios.
-GET http://localhost:3000/productos/66a8057c2c3854e3d4cc5e71
+GET http://localhost:3000/productos/66a957b8eeda3709eabc991c
 
 
 ### >>> Con fallas!
@@ -222,14 +280,15 @@ GET http://localhost:3000/productos/66a8057c2c3854e3d4cc5e71
 ### Debe dar un error, cada uno con su mensaje específico!
 
 ### Caso 1. Con el body vacio!
-PATCH http://localhost:3000/productos/66a71b258d45862968e50a75
+PATCH http://localhost:3000/productos/66a8f4f029b92495c5db00c3
 content-type: application/json
 
 {
 }
 
-### Caso 2. Ninguno de los datos del body es correcto!
-PATCH http://localhost:3000/productos/66a71b258d45862968e50a75
+### Caso 2. Ninguno de los datos del body es "precio", necesario 
+### para modificar!
+PATCH http://localhost:3000/productos/66a8f4f029b92495c5db00c3
 content-type: application/json
 
 {
@@ -258,9 +317,15 @@ content-type: application/json
 ### Borrar un producto
 ###################################
 
-### Para poder consultarlo
-GET http://localhost:3000/productos/66a805702c3854e3d4cc5e6e
+### Para poder consultar el producto a borrar por _id
+GET http://localhost:3000/productos/66a957c5eeda3709eabc991f
+
+### Mostrar producto ingresados. Todos son con Nombre: Trapo... 
+GET http://localhost:3000/productos?nombre=trapo
 
 ### Luego borrar un producto por _id. Si devuelve 204 "No Content" 
 ### es porque borró y esta todo bien!
-DELETE http://localhost:3000/productos/66a805702c3854e3d4cc5e6e
+DELETE http://localhost:3000/productos/66a957c5eeda3709eabc991f
+
+### Otro caso pero acá no existe el _id
+DELETE http://localhost:3000/productos/99a71b258d45862968e50a99

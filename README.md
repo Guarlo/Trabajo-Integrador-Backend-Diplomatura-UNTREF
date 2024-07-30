@@ -1,5 +1,17 @@
 # Proyecto Integrador: CRUD con Node.js y MongoDB
 
+## Descripción de Funcionaledad
+
+
+> .
+>
+> Toda la funcionalidad del sistema está descripta en cada una de las lineas del archivo  **api.http**
+>
+> El archivo **app.js** tambien está comentado en cadda una de las funciones. 
+> 
+> .
+
+
 ## Descripción del Proyecto
 
 En este proyecto, desarrollarás una aplicación basada en Node.js y MongoDB que permita realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) en una base de datos. La base de datos MongoDB deberá estar generada en el clúster de mongodb.com y tu aplicación Node.js se conectará a ella.

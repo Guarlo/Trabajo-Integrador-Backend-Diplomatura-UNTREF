@@ -113,15 +113,16 @@ app.get('/productos', (req, res) => {
 // Ruta para manejar el POST y agregar un Producto.
 app.post('/productos', validateRequestBody, (req, res) => {
   const newProduct = new Collection(req.body)
-  console.log(newProduct)
-  generateUniqueCodigo()
+  //console.log(newProduct)
+  generateUniqueCodigo(newProduct.codigo)
     .then(codigoUnico => {
       newProduct.codigo = codigoUnico
-      console.log(newProduct)
+      //console.log(newProduct)
       return newProduct.save()
     })
     .then(savedProduct => {
       //Created
+      console.log("Documento insertado correctamente")
       res.status(201).json({ mensaje: "Documento insertado correctamente", datos: savedProduct })
     })
     .catch((error) => {
@@ -282,11 +283,33 @@ function createAccentInsensitiveRegex(str) {
 }
 
 
-// Función para generar un código único
-function generateUniqueCodigo() {
-  function generateRandomNumber() {
-    return Math.floor(Math.random() * 9000) + 1000
-  }
+// // Función para generar un código único
+// function generateUniqueCodigo() {
+//   function generateRandomNumber() {
+//     return Math.floor(Math.random() * 9000) + 1000
+//   }
+//   function checkCodigo(codigo) {
+//     return Collection.findOne({ codigo: codigo })
+//       .then(result => {
+//         if (!result) {
+//           return codigo
+//         }
+//         // Si el código ya existe, generar uno nuevo y verificar nuevamente
+//         return checkCodigo(generateRandomNumber())
+//       })
+//   }
+//   // Iniciar con un nuevo código y verificar
+//   return checkCodigo(generateRandomNumber())
+// }
+
+// Función para generar un código entre 1000 y 9999
+function generateRandomCodigo() {
+  return Math.floor(Math.random() * 9000) + 1000
+}
+
+// Función para encontrar un código único en la Colección de MongoDB.
+function generateUniqueCodigo(codParam) {
+  //console.log(codParam)
   function checkCodigo(codigo) {
     return Collection.findOne({ codigo: codigo })
       .then(result => {
@@ -294,13 +317,22 @@ function generateUniqueCodigo() {
           return codigo
         }
         // Si el código ya existe, generar uno nuevo y verificar nuevamente
-        return checkCodigo(generateRandomNumber())
+        console.log(`El codigo ${codigo} existe! Se busca uno nuevo!`)
+        return checkCodigo(generateRandomCodigo())
       })
   }
+  // if (codParam) {
+  //   // Intenta con el código recibido y verifica
+  //   return checkCodigo(codParam)
+  // } else {
+  //   // Iniciar con un nuevo código y verificar
+  //   return checkCodigo(generateRandomCodigo())
+  // }
+  // Intenta con el código recibido y verifica
+  // ó
   // Iniciar con un nuevo código y verificar
-  return checkCodigo(generateRandomNumber())
+  return checkCodigo(codParam ? codParam : generateRandomCodigo())
 }
-
 
 // Función de validación
 function validateRequestBody(req, res, next) {
@@ -313,7 +345,7 @@ function validateRequestBody(req, res, next) {
   }
   else {
     //console.log(ObjetoReqBody["codigo"] + "  No vino")
-    const nuevaPropiedad = { codigo: 0 }
+    const nuevaPropiedad = { codigo: generateRandomCodigo() }
     // Crear un nuevo objeto y agregar la nueva propiedad primero
     body = { ...nuevaPropiedad, ...ObjetoReqBody }
   }
@@ -321,7 +353,7 @@ function validateRequestBody(req, res, next) {
 
   // Definición de las validaciones
   const validations = {
-    codigo: value => typeof value === 'number' && value > -1,
+    codigo: value => typeof value === 'number' && value > 1000 && value < 10000,
     nombre: value => typeof value === 'string' && value.trim().length > 0,
     precio: value => typeof value === 'number' && value > 0,
     categoria: value => typeof value === 'string' && value.trim().length > 0
