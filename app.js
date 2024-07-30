@@ -59,11 +59,7 @@ app.get('/productos/:id', (req, res) => {
 
 // Obtener todos los productos y opcionalmente de una query de categoría y/o nombre.
 app.get('/productos', (req, res) => {
-  const { categoria } = req.query
-  const { nombre } = req.query
-  const { codigo } = req.query
-
-  let errorMessage = ""
+  const { codigo, nombre, categoria } = req.query
   let query = {}
 
   if (codigo) {
@@ -112,7 +108,6 @@ app.get('/productos', (req, res) => {
       })
     })
 })
-
 
 
 // Ruta para manejar el POST y agregar un Producto.
@@ -175,7 +170,6 @@ app.delete('/productos/:id', (req, res) => {
 //Modificar/Actualizar un producto parcialmente.
 app.patch('/productos/:id', (req, res) => {
   const { id } = req.params
-  //const { precio } = req.body
   const body = req.body
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -207,7 +201,6 @@ app.patch('/productos/:id', (req, res) => {
         console.log(result)
         //Si el documento se modifica correctamente, devuelve un 204 No Content.
         // , datos: result } no se envia si el status es 404
-
         res.status(204).json({ message: 'Producto actualizado con exito!' })
       } else {
         console.log('No se pudo actualizar el producto!')
@@ -233,6 +226,7 @@ app.use((req, res, next) => {
   err.status = 404
   next(err)
 })
+
 
 // Middleware de manejo de errores
 app.use((err, req, res, next) => {
