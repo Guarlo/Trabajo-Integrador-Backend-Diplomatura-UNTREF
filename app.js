@@ -114,6 +114,7 @@ app.get('/productos', (req, res) => {
 })
 
 
+
 // Ruta para manejar el POST y agregar un Producto.
 app.post('/productos', validateRequestBody, (req, res) => {
   const newProduct = new Collection(req.body)
@@ -177,22 +178,25 @@ app.patch('/productos/:id', (req, res) => {
   //const { precio } = req.body
   const body = req.body
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.error('El Id ingresado está mal formado, no se modifica!!')
+    return res.status(400).json({
+      message: 'El Id ingresado está mal formado, no se modifica!',
+      error: { status: 400 }
+    })
+  }
   // Validar que el cuerpo de la solicitud contiene datos
   if (!body || Object.keys(body).length === 0) {
     return res.status(400).json({
       message: 'El cuerpo de la solicitud no está correctamente instanciado',
-      error: {
-        status: 400
-      }
-    })    
+      error: { status: 400 }
+    })
   }
   if (!body.precio) {
     return res.status(400).json({
       message: 'El cuerpo de la solicitud no informa el precio a modificar',
-      error: {
-        status: 400
-      }
-    })    
+      error: { status: 400 }
+    })
   }
   const updateData = { precio: body.precio }
   console.log(updateData)
@@ -335,7 +339,7 @@ function validateRequestBody(req, res, next) {
         message: `Campo inválido: ${key}`,
         error: {
           status: 400,
-          description: `Campo inválido:`,
+          description: `Campo inválido/requerido:`,
           field: `${key}`
         }
       })

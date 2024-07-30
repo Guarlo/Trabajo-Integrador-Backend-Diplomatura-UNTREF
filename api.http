@@ -1,78 +1,131 @@
 ### Ir a la pagina principal
 http://localhost:3000
 
-################################ CONSULTAS
+
+#############################################################################
+############################      CONSULTAS      ############################
+#############################################################################
+
+
+################################ 
+### RUTAS SIN RESULTADOS 
+################################ 
 
 ### Ruta sin resultados.
 GET http://localhost:3000/error
+
 ### Ruta sin resultados.
 GET http://localhost:3000/invalido
 
 
 
-### Mostrar productos por ID
-GET http://localhost:3000/productos/66a2ba1e86b2e48ada2b78da
-### Mostrar productos por ID
-GET http://localhost:3000/productos/66a2af1420f6416fbeeb04bd
-### Mostrar productos por ID que no existe
-GET http://localhost:3000/productos/14989
-### Mostrar productos por ID mal formado
-GET http://localhost:3000/productos/1498q1
+################################ 
+### CONSULTAS POR ID
+################################ 
 
+### Mostrar productos por ID
+GET http://localhost:3000/productos/66906407b138ba18415e5a89
+
+### Mostrar productos por ID
+GET http://localhost:3000/productos/66906407b138ba18415e5a8a
+
+### Mostrar productos por ID que no existe
+GET http://localhost:3000/productos/66906407b138ba18415e5b8a
+
+### Mostrar productos por ID mal formado
+GET http://localhost:3000/productos/1498q1zdfbhzsdfhdfh
+
+
+################################ 
+### CONSULTA GENERAL
+################################ 
 
 ### Mostrar todos los productos
 GET http://localhost:3000/productos/
 
 
+################################ 
+### CONSULTAS POR CODIGO
+################################ 
 
 ### Mostrar productos por código
 GET http://localhost:3000/productos?codigo=1234
+
 ### Mostrar productos por código
 GET http://localhost:3000/productos?codigo=1498
+
 ### Mostrar productos por código que no existe
 GET http://localhost:3000/productos?codigo=1398
+
 ### Mostrar productos por código mal formado. Contiene Letras!
 GET http://localhost:3000/productos?codigo=1498q1
+
 ### Mostrar productos por código mal formado. Mas de 4 cifras!
 GET http://localhost:3000/productos?codigo=14989
 
 
+################################### 
+### CONSULTAS POR QUERY COMPUERSTA
+###  codigo/nombre/categoria
+###################################
+
+### >>> Cuatro consultas expresadas distintas para la misma busqueda!
 
 ### Mostrar productos por su nombre o parte de él y su cateroría o parte de ella.
 GET http://localhost:3000/productos?nombre=AZuCAR&categoria=Comestible
+
 ### Mostrar productos por su nombre o parte de él y su cateroría o parte de ella.
 GET http://localhost:3000/productos?nombre=AZUCAR&categoria=Comestible
+
 ### Mostrar productos por su nombre o parte de él y su cateroría o parte de ella.
 GET http://localhost:3000/productos?nombre=azucar&categoria=COMEStible
+
 ### Mostrar productos por su nombre o parte de él y su cateroría o parte de ella.
 GET http://localhost:3000/productos?nombre=úcar&categoria=COMEStible
+
+### Tres consultas más, combinando Mayusculas, Minusculas y letras asentuadas!
+
 ### Mostrar productos por su nombre o parte de él y su cateroría o parte de ella.
 GET http://localhost:3000/productos?nombre=CAFE&categoria=INFU
+
 ### Mostrar productos por su nombre o parte de él y su cateroría o parte de ella.
 GET http://localhost:3000/productos?nombre=JABóN&categoria=lIMP
+
 ### Mostrar productos por su nombre o parte de él y su cateroría o parte de ella.
 GET http://localhost:3000/productos?nombre=JABON&categoria=PIEza
 
-### Mostrar todos los productos de una categoría
-GET http://localhost:3000/productos?categoria=Comestible
-### Mostrar todos los productos de una categoría
-GET http://localhost:3000/productos?categoria=Limpieza
-### Mostrar todos los productos de una secuencia de categoría
+
+### >>> Consultas solo por Categorías
+
+### Mostrar todos los productos de una categoría. Comestible 
+GET http://localhost:3000/productos?categoria=comestible
+
+### Mostrar todos los productos de una categoría. Limpieza
+GET http://localhost:3000/productos?categoria=LimpieZa
+
+### Mostrar todos los productos de una secuencia de categoría. Lácteos
 GET http://localhost:3000/productos?categoria=lAct
-### Mostrar todos los productos de una secuencia de categoría
+
+### Mostrar todos los productos de una secuencia de categoría. Infusiones
 GET http://localhost:3000/productos?categoria=Infus
+
+
+### >>> Consultas solo por Nombre
 
 ### Mostrar productos por su nombre o parte de él.
 GET http://localhost:3000/productos?nombre=JABóN
+
 ### Mostrar productos por su nombre o parte de él.
 GET http://localhost:3000/productos?nombre=Mantequilla
+
 ### Mostrar productos por su nombre o parte de él.
 GET http://localhost:3000/productos?nombre=equilla
+
 ### Mostrar productos por su nombre o parte de él.
-GET http://localhost:3000/productos?nombre=caFe
+GET http://localhost:3000/productos?nombre=caFE
 
 ### Mostrar que no se encontraron productos.
-GET http://localhost:3000/productos?nombre=caFetería
+GET http://localhost:3000/productos?nombre=caFetera
 
 
 
@@ -80,16 +133,22 @@ GET http://localhost:3000/productos?nombre=caFetería
 ############################     OPERACIONES     ############################
 #############################################################################
 
+
+
+################################### 
 ### Agregar un producto
+###################################
 
 ################################ 
 ### `inx_codigo` es el nombre del indice agregado a la colección como único 
 ### para que de error si se intenta grabar un código existente!
 ################################ 
 
-### Agregar un producto con datos validos y sin código para que el sistema lo genere.
-### Se la manda tambien un campo extra ("sector") para comprobar que no lo registra!
-### Caso 1
+
+
+### >>> Se agregar un productos sin código para que el sistema lo genere.
+
+### Caso 1 - Funciona - Se le manda ("sector") para comprobar que no lo registra!
 POST http://localhost:3000/productos/
 content-type: application/json
 
@@ -100,77 +159,77 @@ content-type: application/json
     "sector": "sector Limpieza"
 }
 
-### Caso 2
+### Caso 2 - Funciona - Se agrega un producto más!
 POST http://localhost:3000/productos/
 content-type: application/json
 
 {
     "nombre": "Trapo de piso 2",
     "precio": 192,
-    "categoria": "Limpieza",
+    "categoria": "Limpieza"
+}
+
+### Caso 3 - No Funciona porque le falta un campo requerido!
+###         "categoria": "..."
+POST http://localhost:3000/productos/
+content-type: application/json
+
+{
+    "nombre": "Trapo de piso 2",
+    "precio": 192,
     "sector": "sector Limpieza"
 }
 
-### Agregar un producto con datos validos y 
-### enviando el código para que el sistema lo valide!
-POST http://localhost:3000/productos/
-content-type: application/json
 
-{
-    "codigo": 8808, 
-    "nombre": "Trapo de piso 2",
-    "precio": 192,
-    "categoria": "Limpieza"
-}
-
-### Intento de agregar un producto con código repetido par generar 
-### un error, controlarlo y avisarlo!
-POST http://localhost:3000/productos/
-content-type: application/json
-
-{
-    "codigo": 9992, 
-    "nombre": "Repetido 2",
-    "precio": 192,
-    "categoria": "Limpieza"
-}
-
+### >>> Testeos
 
 ### Mostrar nuevo producto ingresado por código.
 GET http://localhost:3000/productos/?codigo=9992
 ### Mostrar nuevo producto ingresado por mombre.
 GET http://localhost:3000/productos?nombre=trapo
+### Para poder consultarlo
+GET http://localhost:3000/productos/66a805702c3854e3d4cc5e6e
 
-################################ 
+
+################################### 
 ### Modificar un producto
-################################ 
+###################################
 
 ### Primero lo consulto 
-GET http://localhost:3000/productos/66a70ec478906ce7d4e7104a
+GET http://localhost:3000/productos/66a8057c2c3854e3d4cc5e71
 
 ### Modificar/Actualizar un producto parcialmente
 ### Modificar un producto por id. Si devuelve 204 "No Content" 
-### se modificó y esta todo bien!
+### es porque se modificó y esta todo bien!
+
+### Caso correcto que funciona!
 ### En este caso se actualiza solo precio. Si llega otro dato, se ignora.
 ### "nombre": "Trapo de piso eee", está para demostrarlo  !!!
-PATCH http://localhost:3000/productos/66a70ec478906ce7d4e7104a
+PATCH http://localhost:3000/productos/66a8057c2c3854e3d4cc5e71
 content-type: application/json
 
 {
     "nombre": "Trapo de piso eee",
-    "precio": 5688 
+    "precio": 5688.33
 }
 
-### En este caso se pasa un body completamente fallido. Debe dar un erro!
-### Caso 1
-PATCH http://localhost:3000/productos/66a70ec478906ce7d4e7104a
+### Para poder consultarlo y ver los cambios.
+GET http://localhost:3000/productos/66a8057c2c3854e3d4cc5e71
+
+
+### >>> Con fallas!
+### Acá se prueban 4 casos con body/parámetro invalidos. 
+### Debe dar un error, cada uno con su mensaje específico!
+
+### Caso 1. Con el body vacio!
+PATCH http://localhost:3000/productos/66a71b258d45862968e50a75
 content-type: application/json
 
 {
 }
 
-### Caso 2
-PATCH http://localhost:3000/productos/66a70ec478906ce7d4e7104a
+### Caso 2. Ninguno de los datos del body es correcto!
+PATCH http://localhost:3000/productos/66a71b258d45862968e50a75
 content-type: application/json
 
 {
@@ -178,14 +237,30 @@ content-type: application/json
     "prexio": 560 
 }
 
+### Caso 3. El body es correcto pero el parámetro con el _id es invalido
+PATCH http://localhost:3000/productos/66a71b258d4586296
+content-type: application/json
 
-################################ 
+{
+    "precio": 5688 
+}
+
+### Caso 4. El body es correcto pero el parámetro con el _id no existe
+PATCH http://localhost:3000/productos/99a71b258d45862968e50a99
+content-type: application/json
+
+{
+    "precio": 1925.25 
+}
+
+
+################################### 
 ### Borrar un producto
-################################ 
+###################################
 
-### Primero lo consulto 
-GET http://localhost:3000/productos/66a70c7f51fad13b67492809
+### Para poder consultarlo
+GET http://localhost:3000/productos/66a805702c3854e3d4cc5e6e
 
-### Luego borrar un producto por id. Si devuelve 204 "No Content" 
-### borró y esta todo bien!
-DELETE http://localhost:3000/productos/66a70c7f51fad13b67492809
+### Luego borrar un producto por _id. Si devuelve 204 "No Content" 
+### es porque borró y esta todo bien!
+DELETE http://localhost:3000/productos/66a805702c3854e3d4cc5e6e
